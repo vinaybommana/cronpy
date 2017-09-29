@@ -1,0 +1,4 @@
+* * * * * open_vim
+18 22 * * * open_vlc
+20 * * * * open_chrome
+21 * * * * open_clementine
