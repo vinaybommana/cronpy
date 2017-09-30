@@ -11,6 +11,7 @@
 */30 * * * * # for every 30 minutes the command should be executed
 # else
 * 0-12 * * * # for 0 to afternoon 12 the command should be executed
+
 ```
 * we can used two functions
 ```python

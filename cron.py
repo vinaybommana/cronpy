@@ -58,6 +58,21 @@ class Task():
         self.day_of_week = day_of_week
         self.work = work
 
+    def is_special_command(self):
+        if (len(self.minutes.split("/")) > 1) or \
+           (len(self.hours.split("/")) > 1) or \
+           (len(self.month.split("/")) > 1) or \
+           (len(self.day.split("/")) > 1) or \
+           (len(self.day_of_week.split("/")) > 1):
+            self.has_repeating_command = True
+
+        elif (len(self.minutes.split("-")) > 1) or \
+             (len(self.hours.split("-")) > 1) or \
+             (len(self.month.split("-")) > 1) or \
+             (len(self.day.split("-")) > 1) or \
+             (len(self.day_of_week.split("-")) > 1):
+            self.has_period_command = True
+
     # computing the present time in order to give the comparison
     def compute_values_of_now(self):
         self.now = str(datetime.now())
@@ -83,7 +98,9 @@ class Task():
                (self.hours == self.hours_of_now or self.hours == "*") and \
                (self.month == self.month_of_now or self.month == "*") and \
                (self.day == self.day_of_now or self.day == "*") and \
-               (self.day_of_week == self.week_day_of_now or self.day_of_week == "*"):
+               (self.day_of_week == self.week_day_of_now or self.day_of_week == "*") and \
+               (self.has_period_command is False) and \
+               (self.has_repeating_command is False):
 
                 print(self.work)
                 print("Task completed")
