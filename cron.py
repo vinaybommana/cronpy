@@ -59,6 +59,18 @@ class Task():
         self.work = work
 
     def is_special_command(self):
+        """
+        if crontab contains special commands
+        */30 * * * * work
+        tells us to repeat the work every 30 minutes
+        ------------------------------
+        other case
+        1-10 * * * * work
+        tells us to do the work for the first ten minutes
+        ------------------------------
+        addition in version 2.0
+        """
+
         if (len(self.minutes.split("/")) > 1) or \
            (len(self.hours.split("/")) > 1) or \
            (len(self.month.split("/")) > 1) or \
@@ -66,11 +78,11 @@ class Task():
            (len(self.day_of_week.split("/")) > 1):
             self.has_repeating_command = True
 
-        elif (len(self.minutes.split("-")) > 1) or \
-             (len(self.hours.split("-")) > 1) or \
-             (len(self.month.split("-")) > 1) or \
-             (len(self.day.split("-")) > 1) or \
-             (len(self.day_of_week.split("-")) > 1):
+        if (len(self.minutes.split("-")) > 1) or \
+           (len(self.hours.split("-")) > 1) or \
+           (len(self.month.split("-")) > 1) or \
+           (len(self.day.split("-")) > 1) or \
+           (len(self.day_of_week.split("-")) > 1):
             self.has_period_command = True
 
     # computing the present time in order to give the comparison
@@ -105,6 +117,28 @@ class Task():
                 print(self.work)
                 print("Task completed")
                 break
+            elif (self.has_period_command is True) and \
+                 (self.has_repeating_command is True):
+                pass
+            elif (self.has_period_command is True):
+                pass
+            elif (self.has_repeating_command is True):
+                if len(self.minutes.split("/")) > 1:
+                    pass
+
+                if len(self.hours.split("/")) > 1:
+                    pass
+
+                if len(self.day.split("/")) > 1:
+                    pass
+
+                if len(self.month.split("/")) > 1:
+                    pass
+
+                if len(self.day_of_week.split("/")) > 1:
+                    pass
+
+                pass
             else:
                 # take a break for 60 seconds
                 time.sleep(60)
@@ -113,6 +147,26 @@ class Task():
     @staticmethod
     def week_day(year, month, date):
         return calendar.weekday(int(year), int(month), int(date))
+
+    @staticmethod
+    def repeat_minutes(minutes):
+        pass
+
+    @staticmethod
+    def repeat_hours(hours):
+        pass
+
+    @staticmethod
+    def repeat_days(days):
+        pass
+
+    @staticmethod
+    def repeat_month(days):
+        pass
+
+    @staticmethod
+    def repeat_day_of_the_week(day_of_week):
+        pass
 
     def __repr__(self):
         return "Task(time, '{}')".format(self.work)
