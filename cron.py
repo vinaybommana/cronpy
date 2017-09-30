@@ -85,9 +85,9 @@ class Task():
                (self.day == self.day_of_now or self.day == "*") and \
                (self.day_of_week == self.week_day_of_now or self.day_of_week == "*"):
 
-                   print(self.work)
-                   print("Task completed")
-                   break
+                print(self.work)
+                print("Task completed")
+                break
             else:
                 # take a break for 60 seconds
                 time.sleep(60)
