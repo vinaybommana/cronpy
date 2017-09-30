@@ -25,4 +25,3 @@ def period_command():
 * The string given out should be split and seen if the repeating or period
   command exists
 * to execute period command the attributes are read and used for the execution
-
