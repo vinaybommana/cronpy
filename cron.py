@@ -150,23 +150,34 @@ class Task():
 
     @staticmethod
     def repeat_minutes(minutes):
+        # time.sleep(60 * minutes)
         pass
 
     @staticmethod
     def repeat_hours(hours):
+        # time.sleep(60 * 60 * hours)
         pass
 
     @staticmethod
     def repeat_days(days):
+        # time.sleep(24 * 60 * 60 * days)
         pass
 
     @staticmethod
-    def repeat_month(days):
+    def repeat_month(month):
+        # time.sleep(month)
+        # no_of_days_of_the_month(2017, month)
         pass
 
     @staticmethod
     def repeat_day_of_the_week(day_of_week):
         pass
+
+    @staticmethod
+    def no_of_days_of_the_month(year, month):
+        # can only be 1 - 12
+        # 1 starts from january
+        return calendar.monthrange(year, month)
 
     def __repr__(self):
         return "Task(time, '{}')".format(self.work)

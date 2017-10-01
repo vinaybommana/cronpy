@@ -25,3 +25,8 @@ def period_command():
 * The string given out should be split and seen if the repeating or period
   command exists
 * to execute period command the attributes are read and used for the execution
+
+## repeating methods
+### repeating minutes
+* the minutes to be should be sent to the `@staticmethod`
+* the function makes the program to sleep for the specified period
