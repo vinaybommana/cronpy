@@ -46,17 +46,28 @@ class Task():
     # tells us that do that at 0 min at 12 hrs mid night on january month
     30 16 * * *
     # tells us that do the task at 30 min at 16:00 everyday
+    ----------------------------------------
+    changes in version 2.0
+    * validation for wrong inputs
+    * multi threading ?? (should work on it)
     """
 
-    # initialising the given data to the task so that
-    # we can compare with the present time and execute the tasks
     def __init__(self, minutes, hours, month, day, day_of_week, work):
+        """
+        initialising the given data to the task so that
+        we can compare with the present time and execute the tasks
+        """
         self.minutes = minutes
         self.hours = hours
         self.month = month
         self.day = day
         self.day_of_week = day_of_week
         self.work = work
+        self.validation = True
+        # just some arbitrary value
+        self.no_of_days = None
+        self.validate(self.minutes, self.hours, self.month, self.day,
+                      self.day_of_week)
 
     def is_special_command(self):
         """
@@ -85,8 +96,10 @@ class Task():
            (len(self.day_of_week.split("-")) > 1):
             self.has_period_command = True
 
-    # computing the present time in order to give the comparison
     def compute_values_of_now(self):
+        """
+        computing the present time in order to give the comparison
+        """
         self.now = str(datetime.now())
         self.day_of_now = self.now.split()[0]
         self.year_of_now = self.day_of_now.split("-")[0]
@@ -99,59 +112,115 @@ class Task():
                                              self.month_of_now,
                                              self.date_of_now)
 
+    @staticmethod
+    def no_of_days_of_the_month(year, month):
+        """
+        gives the no of days in the month
+        for the given year
+        can only be 1 - 12
+        1 starts from january
+        """
+        return calendar.monthrange(year, month)
+
     # method to validate and compare the given task time
     # and at present time
     def start_task(self):
-        while(1):
-            # computing present time every minute
-            self.compute_values_of_now()
-            # validating it with the given time
-            if (self.minutes == self.minutes_of_now or self.minutes == "*") and \
-               (self.hours == self.hours_of_now or self.hours == "*") and \
-               (self.month == self.month_of_now or self.month == "*") and \
-               (self.day == self.day_of_now or self.day == "*") and \
-               (self.day_of_week == self.week_day_of_now or self.day_of_week == "*") and \
-               (self.has_period_command is False) and \
-               (self.has_repeating_command is False):
+        """
+        method to validate and do the tasks
+        main heart of the program
+        """
+        if self.validation is True:
+            while(1):
+                # computing present time every minute
+                self.compute_values_of_now()
+                # validating it with the given time
+                # only 'True' when no repeating is given
+                if (self.minutes == self.minutes_of_now or
+                    self.minutes == "*") and \
+                   (self.hours == self.hours_of_now or self.hours == "*") and \
+                   (self.month == self.month_of_now or self.month == "*") and \
+                   (self.day == self.day_of_now or self.day == "*") and \
+                   (self.day_of_week == self.week_day_of_now or
+                    self.day_of_week == "*") and \
+                   (self.has_period_command is False) and \
+                   (self.has_repeating_command is False):
 
-                print(self.work)
-                print("Task completed")
-                break
-            elif (self.has_period_command is True) and \
-                 (self.has_repeating_command is True):
-                pass
-            elif (self.has_period_command is True):
-                pass
-            elif (self.has_repeating_command is True):
-                if len(self.minutes.split("/")) > 1:
+                    print(self.work)
+                    print("Task completed")
+                    break
+                elif (self.has_period_command is True) and \
+                     (self.has_repeating_command is True):
                     pass
-
-                if len(self.hours.split("/")) > 1:
+                elif (self.has_period_command is True):
                     pass
+                elif (self.has_repeating_command is True):
+                    if (len(self.minutes.split("/")) > 1) and \
+                       (len(self.hours.split("/")) == 1) and \
+                       (len(self.month.split("/")) == 1) and \
+                       (len(self.day.split("/")) == 1) and \
+                       (len(self.day_of_week.split("/")) == 1):
+                        Minutes = self.minutes.split("/")[1]
+                        self.repeat_minutes(Minutes)
 
-                if len(self.day.split("/")) > 1:
+                    if len(self.hours.split("/")) > 1:
+                        pass
+
+                    if len(self.day.split("/")) > 1:
+                        pass
+
+                    if len(self.month.split("/")) > 1:
+                        pass
+
+                    if len(self.day_of_week.split("/")) > 1:
+                        pass
+
                     pass
-
-                if len(self.month.split("/")) > 1:
-                    pass
-
-                if len(self.day_of_week.split("/")) > 1:
-                    pass
-
-                pass
-            else:
-                # take a break for 60 seconds
-                time.sleep(60)
+                else:
+                    # take a break for 60 seconds
+                    time.sleep(60)
+        else:
+            print("Entered Invalid values in crontab.txt")
 
     # gives the week day of now
+    def validate(self, minutes, hours, month, day, day_of_week):
+        """
+        validation method to check if the user entered
+        the correct values to the crontab.txt
+        """
+
+        # for minutes
+        if not(minutes < 0 and minutes > 60):
+            self.validation = False
+
+        # for hours
+        if not(hours < 0 and hours > 23):
+            self.validation = False
+
+        # no of the days of the current month
+        self.no_of_days = self.no_of_days_of_the_month(self.year_of_now,
+                                                       self.month_of_now)
+
+        # for days
+        if not(day < 0 and day > self.no_of_days):
+            self.validation = False
+
+        # for months
+        if not(month <= 0 and month > 12):
+            self.validation = False
+
+        # for day of the week
+        if not(day_of_week < 0 and day_of_week > 6):
+            self.validation = False
+
     @staticmethod
     def week_day(year, month, date):
         return calendar.weekday(int(year), int(month), int(date))
 
-    @staticmethod
-    def repeat_minutes(minutes):
+    def repeat_minutes(self, minutes):
+        while(True):
+            time.sleep(60 * minutes)
+            print(self.work)
         # time.sleep(60 * minutes)
-        pass
 
     @staticmethod
     def repeat_hours(hours):
@@ -174,10 +243,16 @@ class Task():
         pass
 
     @staticmethod
-    def no_of_days_of_the_month(year, month):
-        # can only be 1 - 12
-        # 1 starts from january
-        return calendar.monthrange(year, month)
+    def period_minutes():
+        pass
+
+    @staticmethod
+    def period_hours():
+        pass
+
+    @staticmethod
+    def period_month():
+        pass
 
     def __repr__(self):
         return "Task(time, '{}')".format(self.work)
