@@ -30,3 +30,6 @@ def period_command():
 ### repeating minutes
 * the minutes to be should be sent to the `@staticmethod`
 * the function makes the program to sleep for the specified period
+
+## periodic methods
+* implementing them using a for loop is the idea

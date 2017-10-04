@@ -152,7 +152,23 @@ class Task():
                      (self.has_repeating_command is True):
                     pass
                 elif (self.has_period_command is True):
-                    pass
+                    # we need to check for every value
+                    # minutes
+                    if (len(self.minutes.split("-")) > 1) and \
+                       (len(self.hours.split("-")) == 1) and \
+                       (len(self.month.split("-")) == 1) and \
+                       (len(self.day.split("-")) == 1) and \
+                       (len(self.day_of_week.split("-")) == 1):
+                        start_min = self.minutes.split("-")[0]
+                        end_min = self.minutes.split("-")[1]
+                        self.periodic_minutes(start_min, end_min, self.work)
+                        # hours
+                    elif (len(self.minutes.split("-")) == 1) and \
+                         (len(self.hours.split("-")) > 1) and \
+                         (len(self.month.split("-")) == 1) and \
+                         (len(self.day.split("-")) == 1) and \
+                         (len(self.day_of_week.split("-")) == 1):
+                        pass
                 elif (self.has_repeating_command is True):
                     if (len(self.minutes.split("/")) > 1) and \
                        (len(self.hours.split("/")) == 1) and \
@@ -242,9 +258,23 @@ class Task():
     def repeat_day_of_the_week(day_of_week):
         pass
 
-    @staticmethod
-    def period_minutes():
-        pass
+    def periodic_minutes(self, start_min, end_min, work):
+        """
+        periodic minutes method
+        inputs : starting minute for the period, ending minute, work
+        output : work (if at all the present time period is satisfied with given)
+        """
+        # checking initially for the period
+        # updating the self.minutes initially
+        self.compute_values_of_now()
+        if self.minutes == start_min:
+            # loop to run until the period is completed
+            while self.minutes != end_min:
+                print(work)
+                # waiting for a minute (60 seconds)
+                time.sleep(60)
+                # updating the self.minutes every minute
+                self.compute_values_of_now()
 
     @staticmethod
     def period_hours():
