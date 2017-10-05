@@ -119,8 +119,11 @@ class Task():
         for the given year
         can only be 1 - 12
         1 starts from january
+        calendar.monthrange(year, month) returns a tuple
+        inputs: year and month
+        outputs: (firstweekday, no of days in the month)
         """
-        return calendar.monthrange(year, month)
+        return calendar.monthrange(year, month)[1]
 
     # method to validate and compare the given task time
     # and at present time
@@ -168,7 +171,23 @@ class Task():
                          (len(self.month.split("-")) == 1) and \
                          (len(self.day.split("-")) == 1) and \
                          (len(self.day_of_week.split("-")) == 1):
-                        pass
+                        starting_hour = self.hours.split("-")[0]
+                        ending_hour = self.hours.split("-")[1]
+                        self.periodic_hours(starting_hour, ending_hour, self.work)
+                        # days
+                    elif (len(self.day.split("-")) > 1) and \
+                         (len(self.minutes.split("-")) == 1) and \
+                         (len(self.hours.split("-")) == 1) and \
+                         (len(self.month.split("-")) == 1) and \
+                         (len(self.day_of_week.split("-")) == 1):
+                        self.compute_values_of_now()
+                        starting_date = self.day.split("-")[0]
+                        ending_date = self.day.split("-")[1]
+                        if (starting_date >= 1) and (ending_date <= self.no_of_days_of_the_montht()):
+                            pass
+                        else:
+                            print("Invalid date")
+                            continue
                 elif (self.has_repeating_command is True):
                     if (len(self.minutes.split("/")) > 1) and \
                        (len(self.hours.split("/")) == 1) and \
@@ -266,19 +285,42 @@ class Task():
         """
         # checking initially for the period
         # updating the self.minutes initially
-        self.compute_values_of_now()
-        if self.minutes == start_min:
-            # loop to run until the period is completed
-            while self.minutes != end_min:
-                print(work)
-                # waiting for a minute (60 seconds)
+        while(True):
+            self.compute_values_of_now()
+            if self.minutes_of_now == start_min:
+                # loop to run until the period is completed
+                while self.minutes > end_min:
+                    print(work)
+                    # waiting for a minute (60 seconds)
+                    time.sleep(60)
+                    # updating the self.minutes every minute
+                    self.compute_values_of_now()
+            else:
                 time.sleep(60)
-                # updating the self.minutes every minute
-                self.compute_values_of_now()
 
-    @staticmethod
-    def period_hours():
-        pass
+    def periodic_hours(self, starting_hour, ending_hour, work):
+        """
+        periodic hours function
+        inputs: starting hour ending hour and work
+        output: work (argument)
+        makes the flow to sleep for an hour to execute the remaining
+        periodic events
+        runs for hours
+        """
+        # checking initially for the self.hours to complete
+        # updating self.hours initially and checking it
+        while(True):
+            self.compute_values_of_now()
+            if self.hours_of_now == starting_hour:
+                # loop will run until the ending hour is equal to self.hours
+                while self.hours > ending_hour:
+                    print(work)
+                    # for an hour (3600 seconds)
+                    time.sleep(60 * 60)
+                    # updating the values of self.hours and other constants
+                    self.compute_values_of_now()
+                else:
+                    time.sleep(60 * 60)
 
     @staticmethod
     def period_month():
